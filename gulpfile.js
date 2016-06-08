@@ -6,7 +6,7 @@ var plugin = require('gulp-load-plugins')();
 var del = require('del');
 var runSequence = require('run-sequence');
 var browserSync = require('browser-sync');
-var pagespeed = require('psi');
+// var pagespeed = require('psi');
 var reload = browserSync.reload;
 var fs = require('fs');
 var handlebars = require('gulp-compile-handlebars');
@@ -76,7 +76,7 @@ gulp.task('jshint', function () {
     .pipe(reload({stream: true, once: true}))
     .pipe(plugin.jshint())
     .pipe(plugin.jshint.reporter('jshint-stylish'))
-    //Forces it to fail 
+    //Forces it to fail
     //.pipe(plugin.if(!browserSync.active, plugin.jshint.reporter('fail')));
 });
 
@@ -137,14 +137,14 @@ gulp.task('ngmin', function() {
   .pipe(plugin.size({title: 'ngmin after'}))
   .pipe(gulp.dest('dist/'))
   .pipe(gulp.dest('.tmp/'))
-  //revisioning  
+  //revisioning
   .pipe(plugin.if('*.js', plugin.rev()))
   .pipe(gulp.dest('dist/'))
   .pipe(gulp.dest('.tmp/'))
   .pipe(plugin.rev.manifest())
   .pipe(gulp.dest('dist/'))
   .pipe(gulp.dest('.tmp/'));
-         
+
 });
 
 gulp.task('deploy', function () {
@@ -154,7 +154,7 @@ gulp.task('deploy', function () {
         'app/**/*.js',
         '!app/bower_components/**'
     ], {
-        dot: true    
+        dot: true
     })
     //.pipe(plugin.if('*.js', plugin.ngAnnotate()))
     //.pipe(plugin.if('*.js', plugin.uglify({preserveComments: 'some'})))
@@ -290,7 +290,7 @@ gulp.task('serve:dist', function () {
   gulp.watch(['app/scripts/**/*.js'], function() {
     return runSequence('ngmin', 'index', 'jshint', reload)
   }); //['jshint']);
-  
+
 });
 
 // Build Production Files, the Default Task
@@ -299,16 +299,16 @@ gulp.task('default', ['clean'], function (cb) {
 });
 gulp.task('build', ['default']);
 
-// Run PageSpeed Insights
-// Update `url` below to the public URL for your site
-gulp.task('pagespeed', pagespeed.bind(null, {
-  // By default, we use the PageSpeed Insights
-  // free (no API key) tier. You can use a Google
-  // Developer API key if you have one. See
-  // http://goo.gl/RkN0vE for info key: 'YOUR_API_KEY'
-  url: 'https://example.com',
-  strategy: 'mobile'
-}));
+// // Run PageSpeed Insights
+// // Update `url` below to the public URL for your site
+// gulp.task('pagespeed', pagespeed.bind(null, {
+//   // By default, we use the PageSpeed Insights
+//   // free (no API key) tier. You can use a Google
+//   // Developer API key if you have one. See
+//   // http://goo.gl/RkN0vE for info key: 'YOUR_API_KEY'
+//   url: 'https://example.com',
+//   strategy: 'mobile'
+// }));
 
 // Load custom tasks from the `tasks` directory
 //try { require('require-dir')('tasks'); } catch (err) { console.error(err); }
@@ -331,4 +331,3 @@ gulp.task('pagespeed', pagespeed.bind(null, {
  *  limitations under the License
  *
  */
-
