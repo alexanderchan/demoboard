@@ -1,0 +1,44 @@
+{
+  "name": "test app",
+  "version": "0.0.1",
+  "description": "Testing",
+  "main": "index.html",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-ui-sortable": "~0.12.11",
+    "angular": "1.2.25",
+    "lodash": "~2.4.1",
+    "moment": "~2.8.3",
+    "bootstrap": "~3.2.0",
+    "angular-ui-router": "~0.2.11",
+    "console-polyfill": "~0.1.2",
+    "chrono": "~0.1.10",
+    "toastr": "~2.0.3",
+    "angular-dragdrop": "~1.0.7",
+    "Placeholders.js-bower": "~3.0.2",
+    "multiline": "~1.0.0",
+    "x2js": "*",
+    "angular-modal": "git://github.com/alexanderchan/angular-modal#~0.4.1",
+    "bootswatch": "~3.2.0+4",
+    "font-awesome": "~4.2.0",
+    "jquery-ui-touch-punch": "git://github.com/furf/jquery-ui-touch-punch",
+    "angular-animate": "1.3.0-rc.2",
+    "offline": "~0.7.11",
+    "angular-ui-select": "~0.7.0",
+    "angular-selectize": "*",
+    "angular-selectize2": "~0.5.1",
+    "angular-bootstrap-colorpicker": "~3.0.8",
+    "angular-ui-calendar": "~0.8.1"
+  },
+  "resolutions": {
+    "angular": "^1.2.13"
+  }
+}

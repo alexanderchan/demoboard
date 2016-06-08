@@ -1,0 +1,64 @@
+<div class="modal" todo-escape="cancel()" todo-ctrl-enter="save()" style="display: block">
+          <div class="modal-dialog modal-lg">
+              <div class="modal-content" tabindex="0" jqyoui-draggable data-jqyoui-options="{ handle: '.modal-header'}" data-drag="true">
+          <form class="form-horizontal" role="form" >
+              <div class="modal-header" >
+                <button type="button" class="close" ng-click="save()" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h2>Board settings and Administration</h2>
+              </div>
+              <div class="modal-body">  
+
+                <div class="admin-functions" ng-show="currentUser.admin">
+                  <div class="form-group row">
+                      <label for="classifications" class="control-label col-sm-2">Add missing</label>
+                      <div class="col-sm-10"> 
+                        <button type="button" ng-click="addMissingSortOrder()" class="control btn btn-default" data-dismiss="modal">Add missing sort orders and repair sequential</button>
+                      </div>
+                  </div>                  
+
+                  <div class="form-group row">
+                      <label for="classifications" class="control-label col-sm-2">Renumber</label>
+                      <div class="col-sm-10"> 
+                        <button type="button" ng-click="safeResetSortOrder()" class="control btn btn-default" data-dismiss="modal">Sort by SortOrder and then Date</button>
+                      </div>
+                  </div>                  
+
+                  <div class="form-group row">
+
+                      <label for="popup_description" class="control-label col-sm-2">Reset Sort Order</label>                
+                      <div class="col-sm-4">
+                        <button type="button" ng-click="resetSortOrder()" class="control btn btn-warning" data-dismiss="modal">Reset sort order by date</button>
+                      </div>
+
+                  </div>
+
+                  <div class="form-group row">
+
+                      <label for="popup_description" class="control-label col-sm-2">Save sorting</label>                
+                      <div class="col-sm-4">
+                        <button type="button" ng-click="saveSortOrder()" class="control btn btn-success" data-dismiss="modal">Save sort order</button>
+                      </div>
+
+                  </div>
+              </div>
+
+                  <div class="form-group row">
+
+                      <label for="popup_description" class="control-label col-sm-2">Color</label>                
+                      <div class="col-sm-4">
+                          <input class="control" colorpicker colorpicker-with-input="true" type="text" ng-model="settings.backgroundColor">
+                      </div>
+
+                  </div>                  
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" ng-click="save()" class="btn btn-primary" data-dismiss="modal">Save</button>
+                <button type="button" ng-click="cancel()" todo-focus="true" class="btn btn-default" data-dismiss="modal">Cancel</button>
+              </div>
+          </form>
+            </div>
+          </div>
+        </div>
+
+<div class="modal-backdrop in" ng-click="cancel()" todo-escape="cancel()"></div>

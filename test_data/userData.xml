@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope
+    xmlns:soap="http://www.w3.org/2003/05/soap-envelope"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <soap:Body>
+        <GetUserProfileByNameResponse
+            xmlns="http://microsoft.com/webservices/SharePointPortalServer/UserProfileService">
+            <GetUserProfileByNameResult>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>UserProfile_GUID</Name>
+                    <Privacy>Public</Privacy>
+                    <Values>
+                        <ValueData>
+                            <Value
+                                xmlns:q1="http://microsoft.com/wsdl/types/" xsi:type="q1:guid">3ecd0221-767d-4ab7-b4f5-2be67da4a806
+                            </Value>
+                        </ValueData>
+                    </Values>
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>AccountName</Name>
+                    <Privacy>Public</Privacy>
+                    <Values>
+                        <ValueData>
+                            <Value xsi:type="xsd:string">PROJECTX\AChan</Value>
+                        </ValueData>
+                    </Values>
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>FirstName</Name>
+                    <Privacy>Public</Privacy>
+                    <Values>
+                        <ValueData>
+                            <Value xsi:type="xsd:string">Alexander</Value>
+                        </ValueData>
+                    </Values>
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>LastName</Name>
+                    <Privacy>Public</Privacy>
+                    <Values>
+                        <ValueData>
+                            <Value xsi:type="xsd:string">Chan</Value>
+                        </ValueData>
+                    </Values>
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>PreferredName</Name>
+                    <Privacy>Public</Privacy>
+                    <Values>
+                        <ValueData>
+                            <Value xsi:type="xsd:string">Chan,Alexander,VEVEY,Contractor for Global Business Solutions</Value>
+                        </ValueData>
+                    </Values>
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>WorkPhone</Name>
+                    <Privacy>Public</Privacy>
+                    <Values>
+                        <ValueData>
+                            <Value xsi:type="xsd:string">+41 21 924-1666</Value>
+                        </ValueData>
+                    </Values>
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>Office</Name>
+                    <Privacy>Public</Privacy>
+                    <Values>
+                        <ValueData>
+                            <Value xsi:type="xsd:string">K2-R J1-33</Value>
+                        </ValueData>
+                    </Values>
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>Department</Name>
+                    <Privacy>Public</Privacy>
+                    <Values>
+                        <ValueData>
+                            <Value xsi:type="xsd:string">GLOBE-BS-Innov.Tech&amp;RD-PLM</Value>
+                        </ValueData>
+                    </Values>
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>Title</Name>
+                    <Privacy>Public</Privacy>
+                    <Values>
+                        <ValueData>
+                            <Value xsi:type="xsd:string">M.</Value>
+                        </ValueData>
+                    </Values>
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>Manager</Name>
+                    <Privacy>Public</Privacy>
+                    <Values />
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>AboutMe</Name>
+                    <Privacy>Public</Privacy>
+                    <Values />
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>PersonalSpace</Name>
+                    <Privacy>Public</Privacy>
+                    <Values>
+                        <ValueData>
+                            <Value xsi:type="xsd:string">SPSSITEERROR</Value>
+                        </ValueData>
+                    </Values>
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>PictureURL</Name>
+                    <Privacy>Public</Privacy>
+                    <Values>
+                        <ValueData>
+                            <Value xsi:type="xsd:string">https://thenest--c.eu1.content.force.com/profilephoto/729D0000000i2c0/T</Value>
+                        </ValueData>
+                    </Values>
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>UserName</Name>
+                    <Privacy>Public</Privacy>
+                    <Values>
+                        <ValueData>
+                            <Value xsi:type="xsd:string">AChan</Value>
+                        </ValueData>
+                    </Values>
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>QuickLinks</Name>
+                    <Privacy>Public</Privacy>
+                    <Values />
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>WebSite</Name>
+                    <Privacy>Public</Privacy>
+                    <Values />
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>PublicSiteRedirect</Name>
+                    <Privacy>Public</Privacy>
+                    <Values>
+                        <ValueData>
+                            <Value xsi:type="xsd:string">http://mysite-CTR.PROJECTX.com/Person.aspx?accountname=PROJECTX\AChan</Value>
+                        </ValueData>
+                    </Values>
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>SPS-Dotted-line</Name>
+                    <Privacy>Public</Privacy>
+                    <Values />
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>SPS-Peers</Name>
+                    <Privacy>Public</Privacy>
+                    <Values />
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>SPS-Responsibility</Name>
+                    <Privacy>Public</Privacy>
+                    <Values />
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>SPS-Skills</Name>
+                    <Privacy>Public</Privacy>
+                    <Values />
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>SPS-PastProjects</Name>
+                    <Privacy>Public</Privacy>
+                    <Values />
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>SPS-Interests</Name>
+                    <Privacy>Public</Privacy>
+                    <Values />
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>SPS-School</Name>
+                    <Privacy>Public</Privacy>
+                    <Values />
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>SPS-SipAddress</Name>
+                    <Privacy>Public</Privacy>
+                    <Values>
+                        <ValueData>
+                            <Value xsi:type="xsd:string">sip:AChan@PROJECTX.com</Value>
+                        </ValueData>
+                    </Values>
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>SPS-Birthday</Name>
+                    <Privacy>Public</Privacy>
+                    <Values />
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>SPS-MySiteUpgrade</Name>
+                    <Privacy>Public</Privacy>
+                    <Values />
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>SPS-DontSuggestList</Name>
+                    <Privacy>Private</Privacy>
+                    <Values />
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>SPS-ProxyAddresses</Name>
+                    <Privacy>Public</Privacy>
+                    <Values />
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>SPS-HireDate</Name>
+                    <Privacy>Public</Privacy>
+                    <Values />
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>SPS-LastColleagueAdded</Name>
+                    <Privacy>Private</Privacy>
+                    <Values />
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>SPS-OWAUrl</Name>
+                    <Privacy>Private</Privacy>
+                    <Values />
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>SPS-ResourceAccountName</Name>
+                    <Privacy>Public</Privacy>
+                    <Values />
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>SPS-MasterAccountName</Name>
+                    <Privacy>Public</Privacy>
+                    <Values />
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>Assistant</Name>
+                    <Privacy>Public</Privacy>
+                    <Values />
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>WorkEmail</Name>
+                    <Privacy>Public</Privacy>
+                    <Values>
+                        <ValueData>
+                            <Value xsi:type="xsd:string">Alexander.Chan@PROJECTX.com</Value>
+                        </ValueData>
+                    </Values>
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>CellPhone</Name>
+                    <Privacy>Contacts</Privacy>
+                    <Values />
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>Fax</Name>
+                    <Privacy>Public</Privacy>
+                    <Values />
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>HomePhone</Name>
+                    <Privacy>Contacts</Privacy>
+                    <Values />
+                </PropertyData>
+                <PropertyData>
+                    <IsPrivacyChanged>false</IsPrivacyChanged>
+                    <IsValueChanged>false</IsValueChanged>
+                    <Name>canonicalName</Name>
+                    <Privacy>Public</Privacy>
+                    <Values>
+                        <ValueData>
+                            <Value xsi:type="xsd:string">PROJECTX.com/Organizations/CTR/HQ/Users and Groups/HQ-Vevey-Corporate/AChan</Value>
+                        </ValueData>
+                    </Values>
+                </PropertyData>
+            </GetUserProfileByNameResult>
+        </GetUserProfileByNameResponse>
+    </soap:Body>
+</soap:Envelope>
