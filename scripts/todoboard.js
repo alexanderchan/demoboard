@@ -35,8 +35,8 @@
             id: '17282'
         },
         {
-            name: 'Indiana Jones',
-            searchTerms: 'IJ',
+            name: 'Han Solo',
+            searchTerms: 'HS',
             id: '124649'
         },
         {
@@ -51,10 +51,10 @@
         },
 
         {
-            name: 'Millenium Falcon',
-            searchTerms: 'MF',
+            name: 'Indiana Jones',
+            searchTerms: 'IJ',
             id: '124283',
-            image: 'images/team/kiran.jpg'
+            image: 'images/team/indiana_jones.png'
         }
         ];
 
