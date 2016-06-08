@@ -1,0 +1,34 @@
+         <div class="modal">         
+          <div class="modal-dialog modal-lg">
+          <form class="form-horizontal" role="form" >
+            <div class="modal-content" tabindex="0" jqyoui-draggable data-drag="true">
+              <div class="modal-header" >
+                <button type="button" class="close" ng-click="close('Cancel')" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <!--<h4 class="modal-title">Yes or No?</h4>-->
+                <input type="text" class="form-control"  ng-model="task.title" placeholder="Task title..." todo-focus="true">
+              </div>
+              <div class="modal-body">
+                    <label for="popup_description">Description</label>                
+                <textarea id="popup_description" class="form-control" ng-model="task.description" rows="3"></textarea>
+                    <label for="dueDate">Due Date</label>                
+                    <input id="dueDate" ui-date="datePickerOptions" ng-model="task.dueDate" class="form-control" > 
+                
+                    <label for="assigned_to">Assigned To</label>                
+                    <select 
+                        ng-model="task.user"
+                        class="form-control"
+                        id="assigned_to"
+                        ng-options="user.name for user in users track by user.name"> 
+                    </select>
+                </div>
+
+
+              <div class="modal-footer">
+                <button type="button" ng-click="close('save')" class="btn btn-primary" data-dismiss="modal">Save</button>
+                <button type="button" ng-click="close('cancel')" class="btn btn-default" data-dismiss="modal">Cancel</button>
+              </div>
+            </div>
+          </form>
+          </div>
+        </div>
+

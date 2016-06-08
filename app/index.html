@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="" ng-app="todomvc">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NPDI Board</title>
+    <link rel="SHORTCUT ICON" href="favicon.ico"/>
+    <link rel="icon" sizes="192x192" href="images/touch/chrome-touch-icon-192x192.png">
+    <!-- build:css style/combined.css -->
+    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="bower_components/fullcalendar/fullcalendar.css">
+    <!--<link href="bower_components/bootswatch/sandstone/bootstrap.min.css" rel="stylesheet">-->
+
+    <link rel="stylesheet" href="bower_components/jquery-ui/themes/smoothness/jquery-ui.css">
+    <!--<link rel="stylesheet" href="bower_components/angular-ui-select/dist/select.min.css">-->
+    <link rel="stylesheet" href="styles/todoboard.css">
+    <link rel="stylesheet" href="bower_components/angular-bootstrap-colorpicker/css/colorpicker.css">
+    <link rel="stylesheet" href="bower_components/toastr/toastr.min.css">
+    <link rel="stylesheet" href="bower_components/selectize/dist/css/selectize.bootstrap3.css">
+    <!-- endbuild -->
+
+  </head>
+  <body todo-background>
+  <div id="board-bg" >
+      <div id="board-container" class="ng-cloak container">
+
+          <div ui-view='navigation'></div>
+          <div ui-view='main' class='main-view'></div>
+          <div ui-view></div>
+      </div>
+  </div>
+  <script type="text/ng-template" id="todoboard.html">
+  <div class="floatleft">
+      <div class="list floatleft" ng-repeat="taskSet in taskList track by $index">
+          <h3 class="list-header" ng-click="taskSet.hide = !taskSet.hide">{{taskSet.name}} <span ng-hide="taskSet.hide">-</span><span ng-show="taskSet.hide">+</span></h3>
+          <div todo-window-max-height ui-sortable="sortableOptionsList[0]" class="apps-container" ng-model="taskSet.tasks" app-column="{{taskSet.column}}">
+              <div class="app" id="{{task.id}}" ng-class="{ 'saving': task.saving, 'edited-item': task.editing}" ng-click="showModal({ task: task, tagsFilter: tagsFilter })"
+              ng-repeat="task in taskSet.allTasks track by task.id">
+                  <span ng-if="!task.user.image" class="user-initials user-image pull-right ">{{task.user.searchTerms}}</span>
+                  <img ng-if="task.user.image" class="user-image pull-right" ng-src="{{task.user.image}}"/>
+                  <div class="task-title">{{task.title}}</div>
+                  <div class="task-duedate">{{ task.dueDate | todoDate }}</div>
+                  <div class="taglist">
+                    <span ng-hide="!sessionSettings.showSortOrder">{{task.sortOrder}}</span>
+                    <span class='tag' ng-repeat="tag in task.classifications">{{tag}} </span>
+                  </div>
+              </div>
+          </div>
+          <div ng-click="showModal( { taskList: taskSet, tagsFilter: tagsFilter })" class="add-task">Add a task...</div>
+      </div>
+    <div style="clear: both;"></div>
+</div>
+
+  <div class="clear"></div>
+
+  <div ui-view></div>
+</script>
+
+
+
+
+    <!-- vendor -->
+    <script src="bower_components/moment/min/moment.min.js"></script>
+    <script src="bower_components/console-polyfill/index.js"></script>
+    <script src="bower_components/lodash/dist/lodash.min.js"></script>
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/jquery-ui/ui/jquery.ui.core.js"></script>
+    <script src="bower_components/jquery-ui/ui/jquery.ui.widget.js"></script>
+    <script src="bower_components/jquery-ui/ui/jquery.ui.mouse.js"></script>
+    <script src="bower_components/jquery-ui/ui/jquery.ui.sortable.js"></script>
+    <script src="bower_components/jquery-ui/ui/minified/jquery.ui.datepicker.min.js"></script>
+    <script src="bower_components/jquery-ui/ui/minified/jquery.ui.draggable.min.js"></script>
+    <script src="bower_components/jquery-ui/ui/minified/jquery.ui.resizable.min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="bower_components/toastr/toastr.min.js"></script>
+    <script src="bower_components/selectize/dist/js/standalone/selectize.min.js"></script>
+    <script src="bower_components/chrono/chrono.min.js"></script>
+    <script src="bower_components/multiline/browser.js"></script>
+    <script src="bower_components/x2js/xml2json.min.js"></script>
+
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.min.js"></script>
+    <script src="bower_components/angular-ui-sortable/sortable.js  "></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <script src="bower_components/angular-dragdrop/src/angular-dragdrop.min.js"></script>
+    <script src="bower_components/angular-ui-date/src/date.js"></script>
+    <script src="bower_components/angular-selectize2/dist/selectize.js"></script>
+    <script src="bower_components/angular-modal/modal.js"></script>
+    <script src="bower_components/fullcalendar/fullcalendar.js"></script>
+    <script src="bower_components/angular-ui-calendar/src/calendar.js"></script>
+    <script src="bower_components/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js"></script>
+
+    <!-- end vendor -->
+
+
+    <!-- lodash template to replace the scripts with a revision -->
+    <!--<%
+    var allScriptsName = 'scripts/all.min.js';
+    if (rev[allScriptsName]) {
+        print('<script src="' + rev[allScriptsName] + '"></script>');
+    } else { %>
+        <script src="scripts/all.min.js"></script>-->
+
+    <!-- build:js scripts/combined.js -->
+    <script src="scripts/todoboard.js"></script>
+    <script src="scripts/controllers/todoBoardCtrl.js"></script>
+    <!--<script src="scripts/app.js"></script>-->
+    <script src="scripts/services/todoChrono.js"></script>
+    <script src="scripts/services/todoStorage.js"></script>
+    <script src="scripts/services/todoParse.js"></script>
+    <script src="scripts/services/todoUsersService.js"></script>
+    <script src="scripts/services/editTaskModalService.js"></script>
+    <script src="scripts/services/todoAdminService.js"></script>
+    <script src="scripts/services/todoConfigService.js"></script>
+
+    <script src="scripts/services/todoSharePointStore.js"></script>
+
+    <script src="scripts/controllers/todoTaskModalCtrl.js"></script>
+    <script src="scripts/controllers/todoAdminCtrl.js"></script>
+    <script src="scripts/controllers/todoCalendarCtrl.js"></script>
+    <!--<script src="scripts/modal_controller.js"></script>-->
+
+    <!--Directives-->
+    <script src="scripts/directives/todoFocus.js"></script>
+    <script src="scripts/directives/todoEscape.js"></script>
+    <script src="scripts/directives/todoAlt.js"></script>
+    <script src="scripts/directives/todoCtrlEnter.js"></script>
+    <script src="scripts/directives/todoEnter.js"></script>
+    <script src="scripts/directives/todoDate.js"></script>
+    <script src="scripts/directives/todoWindowMaxHeight.js"></script>
+    <script src="scripts/directives/todoBackground.js"></script>
+    <!--<script src="scripts/directives/editedItemAnimation.js"></script>-->
+
+    <!--Filters-->
+    <script src="scripts/filters/todoDateFilter.js"></script>
+    <script src="scripts/filters/todoUserFilter.js"></script>
+    <script src="scripts/filters/todoDueDateFilter.js"></script>
+    <script src="scripts/filters/todoUserShortFilter.js"></script>
+    <!-- endbuild -->
+
+
+    </body>
+</html>

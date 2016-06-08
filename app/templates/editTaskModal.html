@@ -1,0 +1,69 @@
+<div class="modal" todo-escape="cancel()" todo-ctrl-enter="save()" style="display: block">
+          <div class="modal-dialog modal-lg">
+              <div class="modal-content" tabindex="0" jqyoui-draggable data-jqyoui-options="{ handle: '.modal-header'}" data-drag="true">
+          <form class="form-horizontal" role="form" >
+              <div class="modal-header" >
+                <div ng-show="task.saving" class="alert alert-warning" role="alert">This task has not been fully saved.  Please wait until it is saved.</div>
+                <button type="button" class="close" ng-click="save()" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <!--<h4 class="modal-title">Yes or No?</h4>-->
+                <input type="text" todo-enter="save()" class="form-control"  ng-model="task.title" placeholder="Describe your task. Try dates (monday, next week) and @user..." todo-focus="true">
+
+              </div>
+              <div class="modal-body">  
+
+                  <div class="form-group row">
+                      <label for="classifications" class="control-label col-sm-2">Tags</label>
+                      <div class="col-sm-10"> 
+                          <div id="classifications" selectize="selectizeConfig" options='classifications' ng-model="task.classifications"></div>
+                      </div>
+                  </div>                  
+
+                    <div class="form-group row">
+
+                        <label for="popup_description" class="control-label col-sm-2">Description</label>                
+                        <div class="col-sm-4">
+                            <textarea id="popup_description" class="form-control" ng-model="task.description" rows="11" cols="30"></textarea>
+                        </div>
+
+                        <label for="dueDate" class='control-label col-sm-2'>Due Date</label>                
+                        <div class="col-sm-4">
+                            <div id="dueDate" ui-date="datePickerOptions" ng-model="task.dueDate" > 
+                            </div>
+                            <button type="button" ng-click="addDaysToTask(1)" class="btn btn-default" data-dismiss="modal">Tomorrow</button>
+                            <button type="button" ng-click="addDaysToTask(7)" class="btn btn-default" data-dismiss="modal">Next Week</button>
+                        </div>
+
+                    </div>
+
+
+                  <div class="form-group row">
+                    <label for="assigned_to" class="control-label col-sm-2">Assigned To</label>                
+                      <div class="col-sm-10">
+                     <select 
+                        ng-model="task.user"
+                        class="form-control user-select no-transition"
+                        id="assigned_to"
+                        ng-options="user.name for user in users track by user.name"> 
+                    </select>                   
+                      </div>
+                  </div>
+
+                
+                </div>
+
+              <div class="modal-footer">
+                <div class="pull-left">
+                    <button type="button" ng-repeat="board in boardList" ng-click="moveAndSave(board.board)" 
+                        class="btn btn-default" data-dismiss="modal" 
+                        ng-class="board.board === task.column ? 'btn-info' :'btn-default'"
+                        ng-hide="task.saving">{{ board.name }}</button>
+                </div>
+                <button type="button" ng-click="save()" class="btn btn-primary" data-dismiss="modal" ng-hide="task.saving">Save</button>
+                <button type="button" ng-click="cancel()" class="btn btn-default" data-dismiss="modal">Cancel</button>
+              </div>
+          </form>
+            </div>
+          </div>
+        </div>
+
+<div class="modal-backdrop in" ng-click="cancel()" todo-escape="cancel()"></div>

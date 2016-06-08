@@ -1,0 +1,17 @@
+{
+  "predef": [ "angular", "$", "_", "window" ],
+  "node": true,
+  "browser": true,
+  "esnext": true,
+  "bitwise": true,
+  "camelcase": true,
+  "curly": true,
+  "eqeqeq": true,
+  "indent": 2,
+  "immed": false,
+  "newcap": true,
+  "noarg": true,
+  "quotmark": "single",
+  "undef": true,
+  "unused": "vars"
+}
