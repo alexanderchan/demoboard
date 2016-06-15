@@ -11,7 +11,7 @@
 
         var users =  [
             {
-            name: 'Alexander Chan',
+            name: 'Alex Chan',
             searchTerms: 'AC',
             id: '13514',
             image: 'images/team/alex.jpg',
@@ -36,14 +36,16 @@
             image: 'images/team/mark.jpg'
         },
         {
-            name: 'Han Solo',
-            searchTerms: 'HS',
-            id: '124649'
+            name: 'Darth Vader',
+            searchTerms: 'DV',
+            id: '124649',
+            image: 'images/team/darth.jpg'
         },
         {
-            name: 'Luke Skywalker',
-            searchTerms: 'LS',
-            id: '125'
+            name: 'Yoda Jedi Master',
+            searchTerms: 'YM',
+            id: '125',
+            image: 'images/team/yoda.jpg'
         },
         {
             name: 'R2 D2',
