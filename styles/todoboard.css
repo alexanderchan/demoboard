@@ -291,3 +291,7 @@ h2 {
 .fc-event-vert .fc-event-bg {
     background:none;
 }
+
+.old-task {
+    background: #F5E6A9;
+}
