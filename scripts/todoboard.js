@@ -30,9 +30,10 @@
             image: 'images/team/van_gogh.jpeg'
         },
         {
-            name: 'Marie Curie',
-            searchTerms: 'MC',
-            id: '17282'
+            name: 'Mark Rogers',
+            searchTerms: 'MR',
+            id: '17282',
+            image: 'images/team/mark.jpg'
         },
         {
             name: 'Han Solo',
