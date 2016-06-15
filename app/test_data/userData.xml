@@ -93,7 +93,7 @@
                     <Privacy>Public</Privacy>
                     <Values>
                         <ValueData>
-                            <Value xsi:type="xsd:string">GLOBE-BS-Innov.Tech&amp;RD-PLM</Value>
+                            <Value xsi:type="xsd:string">GProject-BS-Innov.Tech&amp;RD-PLM</Value>
                         </ValueData>
                     </Values>
                 </PropertyData>

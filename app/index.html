@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Power Dashboard</title>
+    <title>NPDI Board</title>
     <link rel="SHORTCUT ICON" href="favicon.ico"/>
     <link rel="icon" sizes="192x192" href="images/touch/chrome-touch-icon-192x192.png">
     <!-- build:css style/combined.css -->
@@ -36,8 +36,7 @@
       <div class="list floatleft" ng-repeat="taskSet in taskList track by $index">
           <h3 class="list-header" ng-click="taskSet.hide = !taskSet.hide">{{taskSet.name}} <span ng-hide="taskSet.hide">-</span><span ng-show="taskSet.hide">+</span></h3>
           <div todo-window-max-height ui-sortable="sortableOptionsList[0]" class="apps-container" ng-model="taskSet.tasks" app-column="{{taskSet.column}}">
-              <div class="app" id="{{task.id}}" ng-class="{ 'saving': task.saving, 'edited-item': task.editing}" ng-click="showModal({ task: task, tagsFilter: tagsFilter })"
-              ng-repeat="task in taskSet.allTasks track by task.id">
+              <div class="app" ng-hide="taskSet.hide" id="{{task.id}}" ng-class="{ 'saving': task.saving, 'edited-item': task.editing, 'old-task': (task.dueDate < today) }" ng-click="showModal({ task: task, tagsFilter: tagsFilter })"  ng-repeat="task in taskSet.tasks track by task.id">
                   <span ng-if="!task.user.image" class="user-initials user-image pull-right ">{{task.user.searchTerms}}</span>
                   <img ng-if="task.user.image" class="user-image pull-right" ng-src="{{task.user.image}}"/>
                   <div class="task-title">{{task.title}}</div>

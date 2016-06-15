@@ -12,11 +12,11 @@ function TodoBoardCtrl($scope, $filter, $log, todoSharePointStore, editTaskModal
 
                            activate();
 
-                           function activate() {                               
+                           function activate() {
                                $scope.settings = todoConfigService.settings;
                                $scope.sessionSettings = todoConfigService.sessionSettings;
                                $scope.listConfig = listConfig;
-
+                               $scope.today = moment().startOf('day');
                                $scope.users = todoUsersService.getUsers();
                                $scope.getShortName = todoUsersService.getShortName;
                                $scope.classifications = todoSharePointStore.classifications;
@@ -54,7 +54,7 @@ function TodoBoardCtrl($scope, $filter, $log, todoSharePointStore, editTaskModal
                                todoSharePointStore.getTasks().then(function(data) {
                                    $scope.rawScreens = data;
                                    applyFilter();
-                                   console.log($scope.taskList);
+                                  // $log.info($scope.taskList);
                                });
                            }
 

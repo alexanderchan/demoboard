@@ -6,7 +6,7 @@
         // Board Configuration
         //--------------------------------------------------------------
         var LIST_NAME = 'DOR'; //
-        var TEAM_ROOM_URL = 'http://path/to/teamroom/'; // $location.protocol + '://' + $location.host + '/external3/IngeniusLabIdeas/';
+        var TEAM_ROOM_URL = 'http://teamroom.todoboard.com/GProjectISIT/TODOBOARDXSolution/'; // $location.protocol + '://' + $location.host + '/external3/IngeniusLabIdeas/';
         var CLASSIFICATION_FIELD_NAME = 'Classification';//'Problem_x0020_Solving_x0020__x00'; //'PS_x0020__x002f__x0020_Improveme';, 'Classification' for DOR
 
         var users =  [
