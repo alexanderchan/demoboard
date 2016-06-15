@@ -41,7 +41,7 @@
         },
         {
             name: 'Luke Skywalker',
-            searchTerms: 'NR',
+            searchTerms: 'LS',
             id: '125'
         },
         {
