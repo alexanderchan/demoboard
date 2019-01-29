@@ -1,29 +1,41 @@
 ﻿/*jslint bitwise: true, eqeqeq: true, camelcase: false */
 
-
-angular.module('todomvc').factory('todoSharePointStore',
-    function($http, $log, $q, $state, $filter, x2js, _, statusBoardMapping, moment, todoUsersService, listConfig, multiline, toastr) {
-    'use strict';
-    var LOCAL_MODE = true
+angular
+  .module("todomvc")
+  .factory("todoSharePointStore", function(
+    $http,
+    $log,
+    $q,
+    $state,
+    $filter,
+    x2js,
+    _,
+    statusBoardMapping,
+    moment,
+    todoUsersService,
+    listConfig,
+    multiline,
+    toastr
+  ) {
+    "use strict";
+    var LOCAL_MODE = true;
 
     var LIST_URL = listConfig.listUrl;
     var USER_URL = listConfig.userUrl;
-    var CLASSIFICATION_FIELDNAME = listConfig.classificationFieldName;//'Problem_x0020_Solving_x0020__x00'; //'PS_x0020__x002f__x0020_Improveme';, 'Classification' for DOR
+    var CLASSIFICATION_FIELDNAME = listConfig.classificationFieldName; //'Problem_x0020_Solving_x0020__x00'; //'PS_x0020__x002f__x0020_Improveme';, 'Classification' for DOR
     var DEFAULT_COLUMN = 0;
-        // Probably we should also map the other required fields which are:
-        // Title, Body (Detailed description), Status, Due Date, Assigned To, SortOrder, Modified
+    // Probably we should also map the other required fields which are:
+    // Title, Body (Detailed description), Status, Due Date, Assigned To, SortOrder, Modified
 
-
-
-    var CLASSIFICATION_FIELDNAME_OWS = '_ows_' + CLASSIFICATION_FIELDNAME;
+    var CLASSIFICATION_FIELDNAME_OWS = "_ows_" + CLASSIFICATION_FIELDNAME;
     var headers = {
-        'Content-Type': 'application/soap+xml; charset=utf-8',
-        'Accept': '*/*'
+      "Content-Type": "application/soap+xml; charset=utf-8",
+      Accept: "*/*"
     };
 
-    var SUCCESS_CODE = '0x00000000';
+    var SUCCESS_CODE = "0x00000000";
     var SORT_INCREMENT = 1000;
-    var TAG_SPLIT = ';#';
+    var TAG_SPLIT = ";#";
     var todoSharePointStore = {};
 
     todoSharePointStore.tasks = [];
@@ -36,20 +48,23 @@ angular.module('todomvc').factory('todoSharePointStore',
     todoSharePointStore.addMissingSortOrder = addMissingSortOrder;
 
     todoSharePointStore.getNextMaxSortOrder = function(column) {
-        return getMaxSortOrder(column) + SORT_INCREMENT;
+      return getMaxSortOrder(column) + SORT_INCREMENT;
     };
 
     todoSharePointStore.getTempGuid = function() {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-            var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-            return v.toString(16);
-        });
+      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(
+        c
+      ) {
+        var r = (Math.random() * 16) | 0,
+          v = c == "x" ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      });
     };
 
     // Returns a promise with an array of allowed classifications
     todoSharePointStore.getClassifications = function() {
-
-        var GET_LIST_DETAILS_XML = multiline.stripIndent(function(){/*!@preserve
+      var GET_LIST_DETAILS_XML = multiline.stripIndent(function() {
+        /*!@preserve
                                         <?xml version="1.0" encoding="utf-8"?>
                                         <soap12:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope">
                                         <soap12:Body>
@@ -62,66 +77,67 @@ angular.module('todomvc').factory('todoSharePointStore',
                                         </soap12:Envelope>
                                         */
         $log.info();
+      });
+
+      var getListDetailsXML = _.template(GET_LIST_DETAILS_XML, {
+        listName: listConfig.listName
+      });
+
+      var config = {
+        method: "POST",
+        url: LIST_URL,
+        headers: headers,
+        data: getListDetailsXML
+      };
+
+      var localConfig = {
+        method: "GET",
+        headers: headers
+      };
+
+      if ($state.params.localmode === "true" || LOCAL_MODE) {
+        localConfig.url = "test_data/list_header.xml";
+        config = localConfig;
+      }
+
+      return $http(config)
+        .then(function(result) {
+          //var listPropertiesDoc = $(result);
+
+          var listPropertiesDoc = $($.parseXML(result.data)); // a jquery wrapped xml document
+          var choicesElements = listPropertiesDoc
+            .find('Field[Name="' + CLASSIFICATION_FIELDNAME + '"]')
+            .find("CHOICE");
+
+          var allowedClassification = [];
+          _.each(choicesElements, function(element) {
+            allowedClassification.push(element.textContent);
+          });
+
+          //var listProperties = x2js.xml_str2json(result.data);
+          // Long array of properties
+          //var properties = currentUserParsedData.Envelope.Body.GetUserProfileByNameResponse.GetUserProfileByNameResult.PropertyData
+          //console.log(currentUserParsedData);
+          todoSharePointStore.classifications = allowedClassification;
+          return allowedClassification;
+        })
+        .catch(function(error) {
+          //toastr.error('Could not read allowed classifications');
+          return null;
         });
-
-        var getListDetailsXML  = _.template(GET_LIST_DETAILS_XML, {
-            listName: listConfig.listName,
-        });
-
-            var config = {
-                method: 'POST',
-                url: LIST_URL,
-                headers: headers,
-                data: getListDetailsXML
-            };
-
-
-            var localConfig = {
-                method: 'GET',
-                headers: headers
-            };
-
-            if ($state.params.localmode === 'true' || LOCAL_MODE){
-                localConfig.url = 'test_data/list_header.xml';
-                config = localConfig;
-            }
-
-            return $http(config).then(function(result){
-                            //var listPropertiesDoc = $(result);
-
-                            var listPropertiesDoc = $($.parseXML(result.data)); // a jquery wrapped xml document
-                            var choicesElements = listPropertiesDoc.find('Field[Name="' + CLASSIFICATION_FIELDNAME + '"]').find('CHOICE');
-
-                            var allowedClassification = [];
-                            _.each(choicesElements, function(element) {
-                                allowedClassification.push(element.textContent);
-                            });
-
-                            //var listProperties = x2js.xml_str2json(result.data);
-                            // Long array of properties
-                            //var properties = currentUserParsedData.Envelope.Body.GetUserProfileByNameResponse.GetUserProfileByNameResult.PropertyData
-                            //console.log(currentUserParsedData);
-                            todoSharePointStore.classifications = allowedClassification;
-                            return allowedClassification;
-                        }).catch(function(error) {
-                            //toastr.error('Could not read allowed classifications');
-                            return null;
-                        });
-
     };
 
     todoSharePointStore.classifications = [];
-    todoSharePointStore.getClassifications().then(function(classifications){
-        todoSharePointStore.classifications = classifications;
+    todoSharePointStore.getClassifications().then(function(classifications) {
+      todoSharePointStore.classifications = classifications;
     });
-
 
     var currentUser;
 
     // Read the current user name from sharepoint and then find the related user
     todoSharePointStore.getCurrentUser = function() {
-
-        var CURRENT_USER_XML = multiline.stripIndent(function(){/*!@preserve
+      var CURRENT_USER_XML = multiline.stripIndent(function() {
+        /*!@preserve
                         <?xml version="1.0" encoding="utf-8"?>
                         <soap12:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope">
                         <soap12:Body>
@@ -134,73 +150,76 @@ angular.module('todomvc').factory('todoSharePointStore',
                         </soap12:Envelope>
         */
         $log.info();
-        });
+      });
 
-        if (currentUser) {
+      if (currentUser) {
         var userPromise = $q.defer();
-            userPromise.resolve(currentUser);
-            return userPromise.promise;
-        } else {
+        userPromise.resolve(currentUser);
+        return userPromise.promise;
+      } else {
+        var config = {
+          method: "POST",
+          url: USER_URL,
+          headers: headers,
+          data: CURRENT_USER_XML
+        };
 
-            var config = {
-                method: 'POST',
-                url: USER_URL,
-                headers: headers,
-                data: CURRENT_USER_XML
-            };
+        var localConfig = {
+          method: "GET",
+          headers: headers
+        };
 
-
-            var localConfig = {
-                method: 'GET',
-                headers: headers
-            };
-
-            if ($state.params.localmode === 'true' || LOCAL_MODE){
-                localConfig.url = 'test_data/userData.xml';
-                config = localConfig;
-            }
-
-            return $http(config).then(function(result){
-                            var currentUserParsedData = x2js.xml_str2json(result.data);
-                            // Long array of properties
-                            var properties = currentUserParsedData.Envelope.Body.GetUserProfileByNameResponse.GetUserProfileByNameResult.PropertyData;
-                            //console.log(currentUserParsedData);
-                            var firstNameProp = _.find(properties, { 'Name':'FirstName'});
-                            if ( firstNameProp ) {
-                                currentUser = todoUsersService.findUser(firstNameProp.Values.ValueData.Value.__text);
-                            } else {
-                                throw 'Could not find name';
-                            }
-                            return currentUser;
-                        }).catch(function(error) {
-                            currentUser = todoUsersService.getUsers()[0];
-                            return currentUser;
-                        });
-
+        if ($state.params.localmode === "true" || LOCAL_MODE) {
+          localConfig.url = "test_data/userData.xml";
+          config = localConfig;
         }
 
+        return $http(config)
+          .then(function(result) {
+            var currentUserParsedData = x2js.xml_str2json(result.data);
+            // Long array of properties
+            var properties =
+              currentUserParsedData.Envelope.Body.GetUserProfileByNameResponse
+                .GetUserProfileByNameResult.PropertyData;
+            //console.log(currentUserParsedData);
+            var firstNameProp = _.find(properties, { Name: "FirstName" });
+            if (firstNameProp) {
+              currentUser = todoUsersService.findUser(
+                firstNameProp.Values.ValueData.Value.__text
+              );
+            } else {
+              throw "Could not find name";
+            }
+            return currentUser;
+          })
+          .catch(function(error) {
+            currentUser = todoUsersService.getUsers()[0];
+            return currentUser;
+          });
+      }
     };
     // initialize the current user right away
-    todoSharePointStore.getCurrentUser().then(function setupCurrentUser(user){
-            currentUser = user;
+    todoSharePointStore.getCurrentUser().then(function setupCurrentUser(user) {
+      currentUser = user;
     });
 
-
-    todoSharePointStore.findStatusByColumn = function findStatusByColumn(column) {
-        var statusBoard = _.find(statusBoardMapping, { board: column });
-        return statusBoard ? statusBoard.statuses[0] : null;
+    todoSharePointStore.findStatusByColumn = function findStatusByColumn(
+      column
+    ) {
+      var statusBoard = _.find(statusBoardMapping, { board: column });
+      return statusBoard ? statusBoard.statuses[0] : null;
     };
-
 
     todoSharePointStore.flattenTags = function flattenTags(tags) {
-        var flatTags = '';
-        if (_.isArray(tags)) {
-            flatTags = TAG_SPLIT + tags.join(TAG_SPLIT) + TAG_SPLIT; // format is ;#tag;#anothertag;#
-        }
-        return flatTags;
+      var flatTags = "";
+      if (_.isArray(tags)) {
+        flatTags = TAG_SPLIT + tags.join(TAG_SPLIT) + TAG_SPLIT; // format is ;#tag;#anothertag;#
+      }
+      return flatTags;
     };
 
-            var NEW_TASK_XML = multiline.stripIndent(function(){/*!@preserve
+    var NEW_TASK_XML = multiline.stripIndent(function() {
+      /*!@preserve
                     <?xml version="1.0" encoding="utf-8"?>
                     <soap12:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope">
                     <soap12:Body>
@@ -224,10 +243,11 @@ angular.module('todomvc').factory('todoSharePointStore',
                         </UpdateListItems>
                     </soap12:Body>
                     </soap12:Envelope>
-            */$log.info();});
+            */ $log.info();
+    });
 
-
-            var UPDATE_SORTORDER_STATUS_XML = multiline.stripIndent(function(){/*!@preserve
+    var UPDATE_SORTORDER_STATUS_XML = multiline.stripIndent(function() {
+      /*!@preserve
                     <?xml version="1.0" encoding="utf-8"?>
                     <soap12:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope">
                     <soap12:Body>
@@ -246,131 +266,142 @@ angular.module('todomvc').factory('todoSharePointStore',
                         </UpdateListItems>
                     </soap12:Body>
                     </soap12:Envelope>
-            */$log.info();});
+            */ $log.info();
+    });
 
     function getMaxSortOrder(column) {
-        var maxTask = _(todoSharePointStore.tasks).where({ column: column }).max( 'sortOrder' ).value();
-        // if the collection is empty, lodash returns -Infinity
-        return  _.isObject(maxTask) ? maxTask.sortOrder : 0;
+      var maxTask = _(todoSharePointStore.tasks)
+        .where({ column: column })
+        .max("sortOrder")
+        .value();
+      // if the collection is empty, lodash returns -Infinity
+      return _.isObject(maxTask) ? maxTask.sortOrder : 0;
     }
 
     function saveSortOrder() {
-        var savedTaskPromises = [];
-        _.each(todoSharePointStore.tasks, function(task) {
-                var savePromise = saveTask(task);
-                savedTaskPromises.push(savePromise);
-        });
+      var savedTaskPromises = [];
+      _.each(todoSharePointStore.tasks, function(task) {
+        var savePromise = saveTask(task);
+        savedTaskPromises.push(savePromise);
+      });
 
-        return $q.all(savedTaskPromises);
+      return $q.all(savedTaskPromises);
     }
 
     function saveTask(task) {
-        var ACTION_UPDATE = 'Update';
-        var ACTION_CREATE = 'New';
+      var ACTION_UPDATE = "Update";
+      var ACTION_CREATE = "New";
 
-        var sharePointAction = ACTION_UPDATE;
-        var id = task.id;
+      var sharePointAction = ACTION_UPDATE;
+      var id = task.id;
 
-        // take the first status if there is nothing else
-        if (!task.status) {
-            task.column = DEFAULT_COLUMN;
-            task.status = statusBoardMapping[DEFAULT_COLUMN].statuses[0];
-        }
+      // take the first status if there is nothing else
+      if (!task.status) {
+        task.column = DEFAULT_COLUMN;
+        task.status = statusBoardMapping[DEFAULT_COLUMN].statuses[0];
+      }
 
-        if (!task.id) {
-            task.id = '$temp' + todoSharePointStore.getTempGuid();
-            sharePointAction = ACTION_CREATE;
-            task.sortOrder = getMaxSortOrder( task.column ) + SORT_INCREMENT;
-        }
+      if (!task.id) {
+        task.id = "$temp" + todoSharePointStore.getTempGuid();
+        sharePointAction = ACTION_CREATE;
+        task.sortOrder = getMaxSortOrder(task.column) + SORT_INCREMENT;
+      }
 
-        // problem if update hasn't come back, need a way to queue up changes for any temporary objects that don't have an id
+      // problem if update hasn't come back, need a way to queue up changes for any temporary objects that don't have an id
 
-        var userId = task.user ? task.user.id : null;
+      var userId = task.user ? task.user.id : null;
 
-        var flatTags = todoSharePointStore.flattenTags(task.classifications);
+      var flatTags = todoSharePointStore.flattenTags(task.classifications);
 
-        var listXML = '';
+      var listXML = "";
 
-        if (task.moved === true) {
-            listXML = UPDATE_SORTORDER_STATUS_XML;
+      if (task.moved === true) {
+        listXML = UPDATE_SORTORDER_STATUS_XML;
+      } else {
+        listXML = NEW_TASK_XML;
+      }
+
+      var newTaskXML = _.template(listXML, {
+        id: id,
+        methodId: 1, // counter starts at 1
+        cmd: sharePointAction,
+        listName: listConfig.listName,
+        title: task.title,
+        userId: userId,
+        description: task.description,
+        status: task.status,
+        sortOrder: task.sortOrder,
+        dueDate: moment(task.dueDate).format("YYYY-MM-DD"),
+        classificationFieldName: CLASSIFICATION_FIELDNAME,
+        flatTags: flatTags
+      });
+
+      // Server config
+      var config = {
+        method: "POST",
+        url: LIST_URL,
+        headers: headers,
+        data: newTaskXML
+      };
+
+      var localConfig = {
+        method: "GET",
+        headers: headers
+      };
+
+      if ($state.params.localmode === "true" || LOCAL_MODE) {
+        if (sharePointAction === ACTION_UPDATE) {
+          localConfig.url = "test_data/save_update_single.xml";
         } else {
-            listXML = NEW_TASK_XML;
+          localConfig.url = "test_data/save_new_task.xml";
         }
+        config = localConfig;
+      }
 
-        var newTaskXML = _.template(listXML, {
-                id: id,
-                methodId: 1, // counter starts at 1
-                cmd: sharePointAction,
-                listName: listConfig.listName,
-                title: task.title,
-                userId: userId,
-                description: task.description,
-                status: task.status,
-                sortOrder: task.sortOrder,
-                dueDate: moment(task.dueDate).format('YYYY-MM-DD'),
-                classificationFieldName: CLASSIFICATION_FIELDNAME,
-                flatTags: flatTags
-        });
+      if (sharePointAction === ACTION_CREATE) {
+        todoSharePointStore.tasks.unshift(task);
+      }
+      task.saving = true;
+      // get the list of users
+      return $http(config)
+        .then(function(result) {
+          // parse all of the data
 
-                // Server config
-        var config = {
-            method: 'POST',
-            url: LIST_URL,
-            headers: headers,
-            data: newTaskXML
-        };
-
-        var localConfig = {
-            method: 'GET',
-            headers: headers
-        };
-
-        if ($state.params.localmode === 'true' || LOCAL_MODE){
-            if ( sharePointAction === ACTION_UPDATE ) {
-                localConfig.url = 'test_data/save_update_single.xml';
-            } else {
-                localConfig.url = 'test_data/save_new_task.xml';
+          var parsedData = x2js.xml_str2json(result.data);
+          if (parsedData) {
+            var errorCode =
+              parsedData.Envelope.Body.UpdateListItemsResponse
+                .UpdateListItemsResult.Results.Result.ErrorCode;
+            if (errorCode !== SUCCESS_CODE) {
+              var errorText =
+                parsedData.Envelope.Body.UpdateListItemsResponse
+                  .UpdateListItemsResult.Results.Result.ErrorText;
+              throw errorText;
             }
-            config = localConfig;
-        }
-
-
-        if (sharePointAction === ACTION_CREATE) {
-            todoSharePointStore.tasks.unshift(task);
-        }
-        task.saving = true;
-        // get the list of users
-        return $http(config).then(function(result){
-                // parse all of the data
-
-                var parsedData = x2js.xml_str2json(result.data);
-                if ( parsedData ) {
-                    var errorCode = parsedData.Envelope.Body.UpdateListItemsResponse.UpdateListItemsResult.Results.Result.ErrorCode;
-                    if (errorCode !== SUCCESS_CODE) {
-                        var errorText = parsedData.Envelope.Body.UpdateListItemsResponse.UpdateListItemsResult.Results.Result.ErrorText;
-                        throw errorText;
-                    }
-                    if ( sharePointAction === ACTION_CREATE ){
-                        var rowData = parsedData.Envelope.Body.UpdateListItemsResponse.UpdateListItemsResult.Results.Result.row;
-                        if (!($state.params.localmode || LOCAL_MODE)) { // in local mode we have to keep the id
-                            task.id = rowData._ows_ID;
-                        }
-                    }
-                    if ( task.moved === true ) {
-                        //toastr.info('"' + task.title + '" changed status to ' + task.status);
-                        task.moved = false;
-                    } else {
-                        //toastr.info('Saved task: ' + task.title );
-                    }
-                    task.saving = false;
-                } else {
-                    task.error = true;
-                    toastr.error('Could not save task, invalid response' );
-                }
-
-        }).catch(function(error) {
-                toastr.error(error, 'Could not save task', { timeOut: 0 });
-                //$log.error(error);
+            if (sharePointAction === ACTION_CREATE) {
+              var rowData =
+                parsedData.Envelope.Body.UpdateListItemsResponse
+                  .UpdateListItemsResult.Results.Result.row;
+              if (!($state.params.localmode || LOCAL_MODE)) {
+                // in local mode we have to keep the id
+                task.id = rowData._ows_ID;
+              }
+            }
+            if (task.moved === true) {
+              //toastr.info('"' + task.title + '" changed status to ' + task.status);
+              task.moved = false;
+            } else {
+              //toastr.info('Saved task: ' + task.title );
+            }
+            task.saving = false;
+          } else {
+            task.error = true;
+            toastr.error("Could not save task, invalid response");
+          }
+        })
+        .catch(function(error) {
+          toastr.error(error, "Could not save task", { timeOut: 0 });
+          //$log.error(error);
         });
     }
 
@@ -378,14 +409,14 @@ angular.module('todomvc').factory('todoSharePointStore',
     todoSharePointStore.getTasks = getTasks;
 
     function getTasks() {
-
-        if (todoSharePointStore.tasks.length > 0) {
-            var dataPromise = $q.defer();
-            dataPromise.resolve(todoSharePointStore.tasks);
-            return dataPromise.promise;
-        }
-        // The entire XML soap message for GetListItems
-        var  GET_TASK_XML = multiline.stripIndent(function(){/*!@preserve
+      if (todoSharePointStore.tasks.length > 0) {
+        var dataPromise = $q.defer();
+        dataPromise.resolve(todoSharePointStore.tasks);
+        return dataPromise.promise;
+      }
+      // The entire XML soap message for GetListItems
+      var GET_TASK_XML = multiline.stripIndent(function() {
+        /*!@preserve
                     <?xml version="1.0" encoding="utf-8"?>
                     <soap12:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope">
                     <soap12:Body>
@@ -444,91 +475,136 @@ angular.module('todomvc').factory('todoSharePointStore',
                     </soap12:Body>
                     </soap12:Envelope>
                     */ $log.info();
-        });
+      });
 
-        var getTaskXML = _.template( GET_TASK_XML, {
-            listName: listConfig.listName
-        });
+      var getTaskXML = _.template(GET_TASK_XML, {
+        listName: listConfig.listName
+      });
 
-        // Server config
-        var config = {
-            method: 'POST',
-            url: LIST_URL,
-            headers: headers,
-            data: getTaskXML
-        };
+      // Server config
+      var config = {
+        method: "POST",
+        url: LIST_URL,
+        headers: headers,
+        data: getTaskXML
+      };
 
-        var localConfig = {
-            method: 'GET',
-            url: 'test_data/tasks_full.xml',
-            headers: headers
-        };
+      var localConfig = {
+        method: "GET",
+        url: "test_data/tasks_full.xml",
+        headers: headers,
+        data: null
+      };
 
-        if ($state.params.localmode === 'true' || LOCAL_MODE){
-            config = localConfig;
-        }
+      if ($state.params.localmode === "true" || LOCAL_MODE) {
+        config = localConfig;
+      }
 
-        //var users = todoUsersService.getUsers();
+      //var users = todoUsersService.getUsers();
 
-        // get the list of users
-        return $http(config).then(function(result){
-                // parse all of the data
-                var parsedData = x2js.xml_str2json(result.data);
+      // get the list of users
+      return $http(config)
+        .then(function(result) {
+          // parse all of the data
+          var parsedData = x2js.xml_str2json(result.data);
 
-                if (parsedData.Envelope.Body.GetListItemsResponse.GetListItemsResult.listitems.data) {
-                    var tasks = parsedData.Envelope.Body.GetListItemsResponse.GetListItemsResult.listitems.data.row;
+          if (
+            parsedData.Envelope.Body.GetListItemsResponse.GetListItemsResult
+              .listitems.data
+          ) {
+            var tasks =
+              parsedData.Envelope.Body.GetListItemsResponse.GetListItemsResult
+                .listitems.data.row;
 
-                    var assignedToRegex = /(.*)\;#(.*)/i;
-                    var users = todoUsersService.getUsers();
+            var assignedToRegex = /(.*)\;#(.*)/i;
+            var users = todoUsersService.getUsers();
 
-                    todoSharePointStore.tasks = [];
+            todoSharePointStore.tasks = [];
 
-                    _.forEach(tasks, function(parsedTask) {
-                        var task = {};
+            var randomDate = function({
+              rangeOfDays,
+              startHour,
+              hourRange,
+              includeNegative = false
+            }) {
+              var today = new Date(Date.now());
+              var sign = 1;
+              if (includeNegative) {
+                sign = Math.random() < 0.5 ? -1 : 1;
+              }
+              return new Date(
+                today.getFullYear(),
+                today.getMonth(),
+                today.getDate() + sign * Math.random() * rangeOfDays,
+                Math.random() * hourRange + startHour,
+                Math.random() * 60
+              );
+            };
 
-                        var userMatch = assignedToRegex.exec(parsedTask._ows_AssignedTo);
-                        if ( userMatch ) {
-                            task.userId = userMatch[1];
-                            task.userNameFull = userMatch[2];
-                            task.user = _.find(users, { id: task.userId });
-                            if (!task.user) {
-                                $log.info('Could not find ' + task.userId + ' : ' + task.userNameFull );
-                            }
-                        }
+            _.forEach(tasks, function(parsedTask) {
+              var task = {};
 
-                        task.dueDate = moment(parsedTask._ows_DueDate).toDate();
-                        task.id = parsedTask._ows_ID;
-                        task.title = parsedTask._ows_Title;
-                        task.status = parsedTask._ows_Status;
-
-                        if (isNaN(parsedTask._ows_SortOrder)) {
-                            task.sortOrder = null;
-                        } else {
-                            task.sortOrder = parseFloat(parsedTask._ows_SortOrder);
-                        }
-
-                        if ( parsedTask[CLASSIFICATION_FIELDNAME_OWS] ) {
-                            // Split at the separator ;# and then remove all blanks with compact
-                            task.classifications = _.compact(parsedTask[CLASSIFICATION_FIELDNAME_OWS].split(TAG_SPLIT));
-                        }
-
-                        // Find the board with the corresponding status in the list
-                        var statusBoard = _.find(statusBoardMapping, { statuses: [ task.status ] });
-                        if (statusBoard) {
-                            task.column = statusBoard.board;
-                        }
-                        task.description = parsedTask._ows_Body;
-                        todoSharePointStore.tasks.push(task);
-                    });
-
-                    //todoSharePointStore.tasks = tasks;
-                    //resetTaskSortOrderKeepingSortOrder(); // in case there are some missing sort orders
-                    //todoSharePointStore.tasks = rebaseTaskSortOrder(tasks);
-                    // move the tasks into a normalized model
-                    return todoSharePointStore.tasks;
+              var userMatch = assignedToRegex.exec(parsedTask._ows_AssignedTo);
+              if (userMatch) {
+                task.userId = userMatch[1];
+                task.userNameFull = userMatch[2];
+                task.user = _.find(users, { id: task.userId });
+                if (!task.user) {
+                  $log.info(
+                    "Could not find " + task.userId + " : " + task.userNameFull
+                  );
                 }
-        }).catch(function(error){
-            toastr.error('Could not read tasks from server.');
+              }
+
+              task.dueDate = moment(parsedTask._ows_DueDate).toDate();
+
+              if ($state.params.localmode || LOCAL_MODE) {
+                // set a random date +/- 30 days
+                task.dueDate = randomDate({
+                  rangeOfDays: 15,
+                  hourRange: 12,
+                  startHour: 0,
+                  includeNegative: true
+                });
+              }
+
+              task.id = parsedTask._ows_ID;
+              task.title = parsedTask._ows_Title;
+              task.status = parsedTask._ows_Status;
+
+              if (isNaN(parsedTask._ows_SortOrder)) {
+                task.sortOrder = null;
+              } else {
+                task.sortOrder = parseFloat(parsedTask._ows_SortOrder);
+              }
+
+              if (parsedTask[CLASSIFICATION_FIELDNAME_OWS]) {
+                // Split at the separator ;# and then remove all blanks with compact
+                task.classifications = _.compact(
+                  parsedTask[CLASSIFICATION_FIELDNAME_OWS].split(TAG_SPLIT)
+                );
+              }
+
+              // Find the board with the corresponding status in the list
+              var statusBoard = _.find(statusBoardMapping, {
+                statuses: [task.status]
+              });
+              if (statusBoard) {
+                task.column = statusBoard.board;
+              }
+              task.description = parsedTask._ows_Body;
+              todoSharePointStore.tasks.push(task);
+            });
+
+            //todoSharePointStore.tasks = tasks;
+            //resetTaskSortOrderKeepingSortOrder(); // in case there are some missing sort orders
+            //todoSharePointStore.tasks = rebaseTaskSortOrder(tasks);
+            // move the tasks into a normalized model
+            return todoSharePointStore.tasks;
+          }
+        })
+        .catch(function(error) {
+          toastr.error("Could not read tasks from server.");
         });
     }
 
@@ -536,131 +612,134 @@ angular.module('todomvc').factory('todoSharePointStore',
      * Useful if the existing sort order needs to be kept
      */
     function resetTaskSortOrderKeepingSortOrder() {
+      // Sort by column, sort order, date due
+      var sortedTasks = _(todoSharePointStore.tasks)
+        .sortBy(["dueDate"])
+        .sortBy(["column", "sortOrder"])
+        .value();
 
-        // Sort by column, sort order, date due
-        var sortedTasks = _(todoSharePointStore.tasks)
-                    .sortBy(['dueDate'])
-                    .sortBy(['column', 'sortOrder']).value();
+      _.each(sortedTasks, function(task) {
+        task.sortOrder = null;
+      });
 
-        _.each(sortedTasks, function(task) {
-            task.sortOrder = null;
-        });
-
-        return updateSortOrder(sortedTasks);
+      return updateSortOrder(sortedTasks);
     }
 
     function addMissingSortOrder() {
-        /* it should keep existing sort numbers unless
-         * it should add if the prev === next
-         * it should add sort numbers to null values
-         */
-    /* Need to keep existing sortOrder and just add numbers to missing tasks
-     */
+      /* it should keep existing sort numbers unless
+       * it should add if the prev === next
+       * it should add sort numbers to null values
+       */
+      /* Need to keep existing sortOrder and just add numbers to missing tasks
+       */
 
-        // Sort by column, sort order, date due
-        var sortedTasks = _(todoSharePointStore.tasks)
-                    .sortBy(['dueDate'])
-                    .sortBy(['column', 'sortOrder']).value();
-        var keepSortOrderValue = true;
+      // Sort by column, sort order, date due
+      var sortedTasks = _(todoSharePointStore.tasks)
+        .sortBy(["dueDate"])
+        .sortBy(["column", "sortOrder"])
+        .value();
+      var keepSortOrderValue = true;
 
-        return updateSortOrder( sortedTasks, keepSortOrderValue );
-
+      return updateSortOrder(sortedTasks, keepSortOrderValue);
     }
 
     /* Completely reset the sortorder by dueDate.
      *
      */
     function resetTaskSortOrder() {
+      // Sort by column, sort order, date due
+      var sortedTasks = _(todoSharePointStore.tasks)
+        .sortBy(["dueDate"])
+        .sortBy(["column"])
+        .value();
 
-        // Sort by column, sort order, date due
-        var sortedTasks = _(todoSharePointStore.tasks)
-                    .sortBy(['dueDate'])
-                    .sortBy(['column']).value();
+      _.each(sortedTasks, function(task) {
+        task.sortOrder = null;
+      });
 
-        _.each(sortedTasks, function(task) {
-            task.sortOrder = null;
-        });
-
-        return updateSortOrder(sortedTasks);
+      return updateSortOrder(sortedTasks);
     }
 
     function updateSortOrder(sortedTasks, keepSortOrderValue) {
-        // Then, for each group of columns, index
+      // Then, for each group of columns, index
 
-        var taskLists = [];
-        _.forEach(statusBoardMapping, function(statusBoard) {
-            taskLists[statusBoard.board] = _.where(sortedTasks, { column : statusBoard.board });
+      var taskLists = [];
+      _.forEach(statusBoardMapping, function(statusBoard) {
+        taskLists[statusBoard.board] = _.where(sortedTasks, {
+          column: statusBoard.board
         });
+      });
 
-        _.forEach(taskLists, function(tasks) {
-            _.forEach(tasks, function(task, index) {
-                if (keepSortOrderValue === true && task.sortOrder) {
-                    // Check if the current and the next have the same value, if so recalculate the current
-                    // otherwise it can stay where it is
-                    if (tasks[index + 1] && task.sortOrder === tasks[index + 1].sortOrder) {
-                        task.sortOrder = null;
-                        calcSortOrder(tasks, task, index);
-                    }
-                } else if (keepSortOrderValue === true && !task.sortOrder) {
-                    calcSortOrder(tasks, task, index);
-                } else {
-                    calcSortOrder(tasks, task, index);
-                }
-            });
+      _.forEach(taskLists, function(tasks) {
+        _.forEach(tasks, function(task, index) {
+          if (keepSortOrderValue === true && task.sortOrder) {
+            // Check if the current and the next have the same value, if so recalculate the current
+            // otherwise it can stay where it is
+            if (
+              tasks[index + 1] &&
+              task.sortOrder === tasks[index + 1].sortOrder
+            ) {
+              task.sortOrder = null;
+              calcSortOrder(tasks, task, index);
+            }
+          } else if (keepSortOrderValue === true && !task.sortOrder) {
+            calcSortOrder(tasks, task, index);
+          } else {
+            calcSortOrder(tasks, task, index);
+          }
         });
+      });
 
-        return sortedTasks;
-
+      return sortedTasks;
     }
 
     function calcSortOrder(tasks, task, index) {
-        var prevIndex = index - 1;
-        var nextIndex = index + 1;
+      var prevIndex = index - 1;
+      var nextIndex = index + 1;
 
-        var prev = tasks[prevIndex];
-        var next = tasks[nextIndex];
+      var prev = tasks[prevIndex];
+      var next = tasks[nextIndex];
 
-        // Determine the new sortorder given the prev and next values
-        var prevSort = null;
-        var nextSort = null;
+      // Determine the new sortorder given the prev and next values
+      var prevSort = null;
+      var nextSort = null;
 
-        if (prev && prev.sortOrder) {
-            prevSort = prev.sortOrder;
-        } else {
-            prevSort = 0; // normally this should happen at the top or if somehow there was no sort number for the prev
+      if (prev && prev.sortOrder) {
+        prevSort = prev.sortOrder;
+      } else {
+        prevSort = 0; // normally this should happen at the top or if somehow there was no sort number for the prev
+      }
+
+      if (next && next.sortOrder) {
+        nextSort = next.sortOrder;
+      } else {
+        nextSort = null;
+      }
+
+      var DEFAULT_INSERTION = 1000;
+      var sortOrder;
+      // If there is no next, just add 1000 to the previous
+      if (nextSort === null) {
+        sortOrder = prevSort + DEFAULT_INSERTION;
+      } else {
+        // insert this halfway between prev and next
+        sortOrder = (nextSort - prevSort) / 2 + prevSort;
+
+        // It's possible that the space between is 0 so we need more space
+        if (sortOrder === prevSort || sortOrder === nextSort) {
+          // resort and reset the numbering from previous upwards
         }
+      }
 
-        if (next && next.sortOrder) {
-            nextSort = next.sortOrder;
-        } else {
-            nextSort = null;
-        }
-
-        var DEFAULT_INSERTION = 1000;
-        var sortOrder;
-        // If there is no next, just add 1000 to the previous
-        if ( nextSort === null ) {
-            sortOrder = prevSort + DEFAULT_INSERTION;
-        } else {
-            // insert this halfway between prev and next
-            sortOrder = ( nextSort - prevSort ) / 2 + prevSort;
-
-            // It's possible that the space between is 0 so we need more space
-            if (( sortOrder === prevSort ) || (sortOrder === nextSort )) {
-                // resort and reset the numbering from previous upwards
-            }
-        }
-
-        if ( sortOrder !== task.sortOrder ) {
-            task.sortOrder = sortOrder;
-            task.moved = true;
-            return true;
-        } else {
-            return false;
-        }
-        // check for the previous and next in the column
+      if (sortOrder !== task.sortOrder) {
+        task.sortOrder = sortOrder;
+        task.moved = true;
+        return true;
+      } else {
+        return false;
+      }
+      // check for the previous and next in the column
     }
 
     return todoSharePointStore;
-
-    });
+  });
